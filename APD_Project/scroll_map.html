@@ -201,25 +201,19 @@
     const loadedData = {};
 
     function getRaceColor(race) {
-      return race === "W" ? "#f5f5f5" :
-             race === "B" ? "#ff4d4d" :
-             race === "H" ? "#ffd23f" :
-             race === "A" ? "#3ddc97" :
-             race === "N" ? "#4ea8de" :
-             race === "U" ? "#bdbdbd" :
-             race === "O" ? "#c77dff" :
-                            "#888888";
+      return race === "W" ? "#d15c2d" :
+             race === "B" ? "#a9d92f" :
+             race === "I" ? "#774bdc" :
+             race === "A" ? "#5abee9" :
+             race === "U" ? "#e665bf" :
     }
 
     function raceLabel(race) {
       return race === "W" ? "White" :
              race === "B" ? "Black" :
-             race === "H" ? "Hispanic" :
              race === "A" ? "Asian" :
-             race === "N" ? "Native American" :
+             race === "I" ? "Indian" :
              race === "U" ? "Unknown" :
-             race === "O" ? "Other" :
-                            "Uncoded";
     }
 
     function stylePoint(feature, latlng) {
@@ -227,11 +221,11 @@
       const color = getRaceColor(race);
 
       return L.circleMarker(latlng, {
-        radius: 2.5,
+        radius: 0.5,
         fillColor: color,
         color: color,
         weight: 0,
-        fillOpacity: 0.85
+        fillOpacity: 1
       });
     }
 
