@@ -246,17 +246,17 @@
     }
 
     function stylePoint(feature, latlng, opacity = 1) {
-      const race = feature.properties.name_race_2;
-      const color = getRaceColor(race);
-      
-      return L.circleMarker(latlng, {
-        radius: .75,
-        fillColor: color,
-        color: color,
-        weight: 0,
-        fillOpacity: opacity,
-        opacity: opacity
-      });
+        const race = feature.properties.name_race_2;
+        const color = getRaceColor(race);
+        
+        return L.circleMarker(latlng, {
+            radius: 1.5,
+            fillColor: color,
+            color: color,
+            weight: 0,
+            fillOpacity: opacity,
+            opacity: opacity
+        });
     }
 
     function onEachFeature(feature, layer) {
@@ -278,80 +278,51 @@
       });
     }
 
-    async function loadYear(year) {
-        if (currentYear === year && currentLayer && currentMode === lastLoadedMode) return;
-        yearLabel.textContent = year;
-                currentYear = year;
-                const thisLoadToken = ++loadToken;
-                // stop any fade already in progress
-                if (activeFadeInterval) {
-                    clearInterval(activeFadeInterval);
-                    activeFadeInterval = null;
-                }
-                try {
-                    let data;
-                    const cacheKey = `${currentMode}_${year}`;
-                    const fileName = currentMode === "searched"
-                    ? `searched_${year}.geojson`
-                    : `jittered_${year}.geojson`;
-                    console.log("Loading file:", fileName);
-                    
-                    if (loadedData[cacheKey]) {
-                        data = loadedData[cacheKey];
-                    } else {
-                        const response = await fetch(fileName);
-                        if (!response.ok) {
-                            throw new Error(`Could not load ${fileName}`);
-                        }
-                        data = await response.json();
-                        loadedData[cacheKey] = data;
-                    }
-                    console.log("Feature count:", data.features.length);
-                    // build next layer at 0 opacity
-                    const nextLayer = L.geoJSON(data, {
-                        pointToLayer: function(feature, latlng) {
-                            return stylePoint(feature, latlng, 0);
-                        },
-                        onEachFeature: onEachFeature
-                    }).addTo(map);
-                    
-                    const previousLayer = currentLayer;
-                    let opacity = 0;
-                    const fadeDuration = 600;
-                    const stepTime = 30;
-                    const opacityStep = stepTime / fadeDuration;
-                    
-                    activeFadeInterval = setInterval(() => {
-                        // if a newer load started, kill this layer
-                        if (thisLoadToken !== loadToken) {
-                            clearInterval(activeFadeInterval);
-                            activeFadeInterval = null;
-                            map.removeLayer(nextLayer);
-                            return;
-                        }
-                        
-                        opacity += opacityStep;
-                        if (opacity > 1) opacity = 1;
-                        setLayerOpacity(nextLayer, opacity);
-                        if (previousLayer) {
-                            setLayerOpacity(previousLayer, 1 - opacity);
-                        }
-                        
-                        if (opacity >= 1) {
-                            clearInterval(activeFadeInterval);
-                            activeFadeInterval = null;
-                            if (previousLayer) {
-                                map.removeLayer(previousLayer);
-                            }
-                            
-                            currentLayer = nextLayer;
-                            lastLoadedMode = currentMode;
-                        }
-                    }, stepTime);
-                } catch (error) {
-                    console.error(error);
-                }
-            }
+async function loadYear(year) {
+  if (currentYear === year && currentLayer && currentMode === lastLoadedMode) return;
+
+  yearLabel.textContent = year;
+  currentYear = year;
+
+  try {
+    let data;
+    const cacheKey = `${currentMode}_${year}`;
+    const fileName = currentMode === "searched"
+      ? `searched_${year}.geojson`
+      : `jittered_${year}.geojson`;
+
+    console.log("Loading file:", fileName);
+
+    if (loadedData[cacheKey]) {
+      data = loadedData[cacheKey];
+    } else {
+      const response = await fetch(fileName);
+      if (!response.ok) {
+        throw new Error(`Could not load ${fileName}`);
+      }
+      data = await response.json();
+      loadedData[cacheKey] = data;
+    }
+
+    console.log("Feature count:", data.features.length);
+
+    if (currentLayer) {
+      map.removeLayer(currentLayer);
+    }
+
+    currentLayer = L.geoJSON(data, {
+      pointToLayer: function(feature, latlng) {
+        return stylePoint(feature, latlng, 1);
+      },
+      onEachFeature: onEachFeature
+    }).addTo(map);
+
+    lastLoadedMode = currentMode;
+
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 const legend = L.control({ position: 'bottomright' });
 
