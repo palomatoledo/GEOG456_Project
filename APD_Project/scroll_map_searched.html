@@ -110,6 +110,33 @@
     .leaflet-container {
       background: black;
     }
+
+    .toggle-box {
+    position: fixed;
+    top: 70px;
+    left: 20px;
+    z-index: 3;
+    background: rgba(0,0,0,0.7);
+    padding: 6px;
+    border-radius: 8px;
+    }
+
+    .toggle-box button {
+    background: #222;
+    color: white;
+    border: 1px solid #555;
+    padding: 5px 10px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    }
+
+    .toggle-box button.active {
+    background: white;
+    color: black;
+    }
+
+
   </style>
 </head>
 <body>
@@ -168,6 +195,7 @@
   ></script>
 
   <script>
+    let currentMode = "all"; // "all" or "searched"
     const map = L.map('map', {
       zoomControl: true,
       attributionControl: false,
@@ -185,6 +213,11 @@
     let currentLayer = null;
     let currentYear = null;
     const yearLabel = document.getElementById('yearLabel');
+
+    <div class="toggle-box">
+        <button id="allBtn" class="active">All stops</button>
+        <button id="searchedBtn">Driver searched</button>
+    </div>
 
     const loadedData = {};
 
@@ -246,16 +279,21 @@
       
       try {
         let data;
-        if (loadedData[year]) {
-          data = loadedData[year];
-        } else {
-          const response = await fetch(`searched_${year}.geojson`);
-          if (!response.ok) {
-            throw new Error(`Could not load searched_${year}.geojson`);
-          }
-          data = await response.json();
-          loadedData[year] = data;
-        }
+        const cacheKey = `${currentMode}_${year}`;
+        const fileName = currentMode === "searched"
+        ? `searched_${year}.geojson`
+        : `jittered_${year}.geojson`;
+        
+        if (loadedData[cacheKey]) {
+            data = loadedData[cacheKey];} else {
+                const response = await fetch(fileName);
+                if (!response.ok) {
+                    throw new Error(`Could not load ${fileName}`);
+                }
+                
+                data = await response.json();
+                loadedData[cacheKey] = data;
+            }
         
         const newLayer = L.geoJSON(data, {
           pointToLayer: function(feature, latlng) {
@@ -337,6 +375,31 @@ legend.addTo(map);
     steps.forEach(step => observer.observe(step));
 
     loadYear('2018');
+
+
+    const allBtn = document.getElementById("allBtn");
+    const searchedBtn = document.getElementById("searchedBtn");
+    
+    function updateButtons() {
+        allBtn.classList.toggle("active", currentMode === "all");
+        searchedBtn.classList.toggle("active", currentMode === "searched");
+    }
+    
+    allBtn.onclick = () => {
+        if (currentMode !== "all") {
+            currentMode = "all";
+            updateButtons();
+            loadYear(currentYear);
+        }
+    };
+    
+    searchedBtn.onclick = () => {
+        if (currentMode !== "searched") {
+            currentMode = "searched";
+            updateButtons();
+            loadYear(currentYear);
+        }
+    };
   </script>
 </body>
 </html>
