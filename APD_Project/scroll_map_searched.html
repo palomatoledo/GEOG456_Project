@@ -285,6 +285,8 @@
         ? `searched_${year}.geojson`
         : `jittered_${year}.geojson`;
         
+        console.log("Loading file:", fileName);
+
         if (loadedData[cacheKey]) {
             data = loadedData[cacheKey];} else {
                 const response = await fetch(fileName);
@@ -295,6 +297,8 @@
                 data = await response.json();
                 loadedData[cacheKey] = data;
             }
+        
+        console.log("Feature count:", data.features.length);
         
         const newLayer = L.geoJSON(data, {
           pointToLayer: function(feature, latlng) {
