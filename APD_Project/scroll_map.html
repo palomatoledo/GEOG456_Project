@@ -273,35 +273,29 @@
       }
     }
 
-    const legend = L.control({ position: 'bottomright' });
+const legend = L.control({ position: 'bottomright' });
 
-    legend.onAdd = function() {
-      const div = L.DomUtil.create('div', 'legend');
+legend.onAdd = function() {
+  const div = L.DomUtil.create('div', 'legend');
 
-      const races = [
-        { code: 'W', label: raceLabel('White') },
-        { code: 'B', label: raceLabel('Black') },
-        { code: 'I', label: raceLabel('Indian') },
-        { code: 'A', label: raceLabel('Asian') },
-        { code: 'U', label: raceLabel('Unknown') }
-      ];
+  const races = ['W', 'B', 'I', 'A', 'U'];
 
-      let html = '<div class="legend-title">Race</div>';
+  let html = '<div class="legend-title">Race</div>';
 
-      races.forEach(item => {
-        html += `
-          <div class="legend-item">
-            <span class="legend-color" style="background:${getRaceColor(item.code)};"></span>
-            <span>${item.label}</span>
-          </div>
-        `;
-      });
+  races.forEach(code => {
+    html += `
+      <div class="legend-item">
+        <span class="legend-color" style="background:${getRaceColor(code)};"></span>
+        <span>${raceLabel(code)}</span>
+      </div>
+    `;
+  });
 
-      div.innerHTML = html;
-      return div;
-    };
+  div.innerHTML = html;
+  return div;
+};
 
-    legend.addTo(map);
+legend.addTo(map);
 
     const steps = document.querySelectorAll('.step');
 
