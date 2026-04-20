@@ -201,6 +201,7 @@
 
   <script>
     let currentMode = "all"; // "all" or "searched"
+    let lastLoadedMode = null;
     const map = L.map('map', {
       zoomControl: true,
       attributionControl: false,
@@ -273,8 +274,8 @@
     }
 
     async function loadYear(year) {
-      if (currentYear === year) return;
-      yearLabel.textContent = year;
+        if (currentYear === year && currentLayer && currentMode === lastLoadedMode) return;
+        yearLabel.textContent = year;
       currentYear = year;
       
       try {
@@ -325,6 +326,7 @@
             }
             
             currentLayer = newLayer;
+            lastLoadedMode = currentMode;
           }
         }, stepTime);
       } catch (error) {
