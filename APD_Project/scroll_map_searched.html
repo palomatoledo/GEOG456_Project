@@ -353,45 +353,4 @@ legend.addTo(map);
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const year = entry.target.dataset.year;
-            loadYear(year);
-          }
-        });
-      },
-      {
-        threshold: 0.55
-      }
-    );
-
-    steps.forEach(step => observer.observe(step));
-
-    loadYear('2018');
-
-
-    const allBtn = document.getElementById("allBtn");
-    const searchedBtn = document.getElementById("searchedBtn");
-    
-    function updateButtons() {
-        allBtn.classList.toggle("active", currentMode === "all");
-        searchedBtn.classList.toggle("active", currentMode === "searched");
-    }
-    
-    allBtn.onclick = () => {
-        if (currentMode !== "all") {
-            currentMode = "all";
-            updateButtons();
-            loadYear(currentYear);
-        }
-    };
-    
-    searchedBtn.onclick = () => {
-        if (currentMode !== "searched") {
-            currentMode = "searched";
-            updateButtons();
-            loadYear(currentYear);
-        }
-    };
-  </script>
-</body>
-</html>
+          if (entry.

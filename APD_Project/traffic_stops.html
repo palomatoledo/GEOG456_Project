@@ -15,12 +15,56 @@
 
     </head>
     <body>
+        <div class="map-nav">
+            <a href="scroll_map_searched.html">Point map</a>
+            <a href="traffic_stops.html" class="active">Beat map</a>
+        </div>
     <div id="mapid"></div>
     <input type="range" id="monthSlider" min="0" max="99" value="0">
     <div id="monthLabel"></div>
     
     <style>
-        #mapid{ width: 900px; height: 750px; }
+        html, body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        color: white;
+        font-family: Arial, sans-serif;
+        }
+
+        #mapid {
+        width: 100vw;
+        height: 100vh;
+        }
+        
+        .map-nav {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.75);
+        padding: 8px;
+        border-radius: 8px;
+        display: flex;
+        gap: 8px;
+        }
+
+        .map-nav a {
+        color: white;
+        text-decoration: none;
+        background: #222;
+        border: 1px solid #555;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        }
+
+        .map-nav a.active {
+        background: white;
+        color: black;
+        border-color: white;
+        }
     </style>
     <script>
 
@@ -32,10 +76,12 @@
     maxZoom: 18
 });
 
-    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19}).addTo(map);
-        osm.addTo(map)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{
+        subdomains: 'abcd',
+        maxZoom: 20,
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    })
+    .addTo(map);
 
 
     // law beats layer
@@ -274,13 +320,3 @@ legendTitle.addTo(map);
 </html>
 
 
-//4/9 mtg notes
-    // convert pts dataset to cvs, open in r (keep x,y,race,and date -- just these 4 columns to reduce dataset size)
-    // chat -> have this dataset, want to present w dot markers, slider controlling for yrs
-        // address overlapping points -- in R, do this ahead of making map
-            // like if x and y are the same, SHIFT by a little bit -- code this in R
-
-    // change cluster colorscheme -- make it go better w the background, somewhat matching
-    // add legend
-    // use colorbrewer for polygon colorscheme
-    // play w natural breaks across whole dataset for polygon color scheme
