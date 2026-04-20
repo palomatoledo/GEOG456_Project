@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APD Data with Slider</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="crossorigin=""></script>
+    
+    <script src="./beats_annual.js"></script>
+
+    <style>
+        h1 {
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 36px;
+        position: relative;
+        top: 10%;
+        text-align: center;
+        outline-style: ridge;
+        -webkit-text-stroke-width: 1px;
+        }
+        h2 {
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        h3 {
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        .legend {
+            line-height: 18px;
+            color: #000;
+            background-color: #ffffff;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7; 
+        }
+        #map { height: 400px;
+            width: 900px;
+            background-color: lightslategray;
+            text-align: center; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Annual APD Use of Force Incidents by Police Beat in Asheville, NC</h1>
+    <h2 id="theYear">Year</h2>
+    
+        <input type="range" name="year" value="2021" min="2021" max="2025" oninput="moveSlider(this.value)">
+        <div id="map"></div>
+        <div class="legend"></div>
+
+    <script>
+        var map = L.map('map').setView([35.57, -82.5461], 11);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+    
+        var selectedYear = '2021'
+        function myStyle(feature) {
+            // console.log(feature.properties[selectedYear]) //look at the console log and notice that selectedYear is the name of a property of the geojson, so this will give you the data for that feature. 
+            // console.log(getColor(feature.properties[selectedYear])) //look at the console log and notice that the selected year will result in a color. 
+
+            return {
+            "fillColor": getColor(feature.properties[selectedYear]),
+            "color": "black",// notice that the selected year is the name of a property of the geojson
+            "weight": 0.75,
+            "opacity": 2.0,
+            "fillOpacity": 0.7
+            }
+        };
+
+        function getColor(per_year_count) {
+            return per_year_count < 10 ? "#FFB8B8" 
+            :per_year_count < 20 ? "#FF8A8A" 
+            :per_year_count < 30 ? "#FF5C5C"
+            :per_year_count < 40 ? "#FF2E2E"
+            : "#D10000";
+        };
+
+        var apdIncidents = L.geoJSON(incidents, {style: myStyle}).addTo(map);
+
+        function moveSlider(value) {
+            selectedYear = value; // this changes the value of the selectedYear variable
+            map.removeLayer(apdIncidents);// leaflet method to remove a layer / 
+            apdIncidents = L.geoJSON(incidents, {style: myStyle});
+            map.addLayer(apdIncidents); // add the new layer
+            document.getElementById('theYear').innerHTML = 'Year: '+ value  
+        }
+        moveSlider('2021')
+
+        // create a leaflet legend
+        var legend = L.control({position: 'bottomright'});
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0, 10, 20, 30, 40],
+                labels = [];
+
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + ' incidents'+ '<br>' : '+ incidents');
+            }
+            return div;
+        };
+        legend.addTo(map);
+
+        var legendTitle = L.control({position: 'bottomright'});
+            legendTitle.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+
+            legendTitle.update = function (props) {
+                this._div.innerHTML = '<h3><u>Use of Force Incidents</u></h3>';
+            };
+            legendTitle.addTo(map);
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+/* style and html from https://www.w3schools.com/html/tryit.asp?filename=tryhtml_table_intro */
+table {
+  font-family: Tahoma, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 8px; 
+  overflow: hidden; 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 10px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.high {
+  background-color: yellow;
+}
+.low {
+  background-color: gray;
+}
+</style>
+</head>
+<script src="./apd_mini_data.js"></script>
+<body>
+
+<h2 style="font-family: 'Verdana', sans-serif; color: #007acc;" >Asheville Police Department Use of Force Data</h2>
+<h4 style="font-family: 'Verdana', sans-serif; color: #3498db;">Police beats (patrol areas) in green had less than 100 documented incidents of police use of force from 2021-2024. Those in red had 100 or more incidents.</h4>
+
+<table id="mytable">
+  <tr>
+    <th>Police Beat (Patrol Area)</th>
+    <th>Number of Documented Use of Force Incidents (2021-2024)</th>
+  </tr>
+  
+</table>
+</script>
+
+<script>
+  var x = document.getElementById('mytable')
+  
+  data.features.forEach(element => {makeCell(element)});
+
+    function makeCell(e) {
+      var myNewRow = document.createElement('tr');
+      var myNewCell1 = document.createElement('td');
+      var myNewCell2 = document.createElement('td');
+
+      myNewCell1.innerHTML = e.properties.beat;
+      myNewCell2.innerHTML = e.properties.incident_count_1;
+
+    if(myNewCell2.innerHTML > 100 ){ myNewCell1.style.backgroundColor = '#ad080f'}
+    if(myNewCell2.innerHTML <= 100 ){ myNewCell1.style.backgroundColor = '#71B340'}
+
+    if(myNewCell2.innerHTML > 100 ){ myNewCell2.style.backgroundColor = '#ad080f'}
+    if(myNewCell2.innerHTML <= 100 ){ myNewCell2.style.backgroundColor = '#71B340'}
+
+    myNewRow.append(myNewCell1);
+    myNewRow.append(myNewCell2);
+    x.append(myNewRow);
+
+  } // The loop ends
+
+</script>
+
+</body>
+
+
+</html>
+
+

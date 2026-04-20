@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>DC Museums</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+        <script src="./museums.js" ></script>
+    </head>
+    <body>
+    <div id="mapid"></div>
+    
+    <style>
+        #mapid{ width: 900px; height: 750px; }
+    </style>
+    <script>
+
+    var map = L.map('mapid').setView([38.8989, -77.027064], 13);
+
+    // create variables for both basemaps
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        })
+
+    var Esri_WorldStreetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+});
+
+    // create custom icon variable
+    var museumIcon = L.icon({
+        iconUrl: './museum_icon.png',
+        iconSize: [30,30], // size of the icon
+        popupAnchor: [0,0] // where the icon is located relative to the lat lon of the point. 
+        });
+
+    var myGeoJSON = L.geoJSON(museums, {
+    pointToLayer: function (feature, latlng) {
+    return L.marker(latlng, {icon: museumIcon})
+        .bindPopup(feature.properties.DCGISPLACE_NAMES_PTNAME)}})
+    .addTo(map);
+    
+    // set up layer control
+    var baseMaps = {
+    "OpenStreetMap": osm,
+    "ESRI": Esri_WorldStreetMap};
+
+    var overlayMaps = {
+    "Museum": myGeoJSON};
+
+    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    osm.addTo(map)
+    myGeoJSON.addTo(map)
+
+    </script>
+    </body>
+</html>

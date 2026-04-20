@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>US Capitol Building</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+        <script src="./capitol_hill.js" ></script>
+    </head>
+    <body>
+    <div id="mapid"></div>
+    
+    <style>
+        #mapid{ width: 900px; height: 500px; }
+    </style>
+    <script>
+
+    var map = L.map('mapid').setView([38.889805, -77.009056], 17);
+
+    // create the variable map by  initializing the L.map class (a Leaflet class) with the mapid element that we created before
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+    // create custom icon variable
+    var capitolIcon = L.icon({
+        iconUrl: './iconic-united-states-capitol-building-with-classic-architectural-design-free-png.png',
+        iconSize: [75,75], // size of the icon
+        popupAnchor: [0,0] // where the icon is located relative to the lat lon of the point. 
+        });
+
+    // create an HTML variable that will pop up with a US Capitol Building photo
+    var customPopup = "The US Capitol houses the legislative branch of the United States federal government.<br/><img src='https://www.henleypark.com/resourcefiles/mainimages/washington-united-states-capitol-top.jpg?version=1062026213435' width='300px'/>";
+
+    // the following line should go at the end, before script closing tag 
+
+    L.geoJSON(capitolHill, {
+    pointToLayer: function (feature, latlng) {
+    return L.marker(latlng, {icon: capitolIcon});}})
+        .bindPopup(customPopup)
+    .addTo(map);
+    
+    </script>
+    </body>
+</html>

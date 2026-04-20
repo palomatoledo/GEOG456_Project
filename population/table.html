@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+
+<script src="./NC20counties_pop_4326.js"></script>
+
+<body>
+    <table id="ncTable">
+    <tr>
+        <th>County Name</th>
+        <th>Population</th>
+    </tr>
+    </table>
+
+<script>
+
+var myTable = document.getElementById('ncTable')
+
+function popTable(feature){
+    var myRow = document.createElement('tr') //creates a row (tr in html refers to row)
+    var myCell1 = document.createElement('td') //creates a cell
+    var myCell2 = document.createElement('td') //creates a cell
+
+    var name = feature.properties.NAME // gets name of each feature (county)
+    var population = feature.properties.Total // gets population of each feature (county)
+    
+    myCell1.innerHTML = name
+    myCell2.innerHTML = population
+
+    myRow.append(myCell1)
+    myRow.append(myCell2)
+    myTable.append(myRow)
+}
+
+</script>
+
+
+</body>
+</html>

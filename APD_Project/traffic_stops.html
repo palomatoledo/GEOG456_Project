@@ -1,0 +1,286 @@
+<html>
+    <head>
+        <title>APD Traffic Stops Since 2017</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+        <script src="./stops.js" ></script>
+        <script src="./beats.js" ></script>
+
+    </head>
+    <body>
+    <div id="mapid"></div>
+    <input type="range" id="monthSlider" min="0" max="99" value="0">
+    <div id="monthLabel"></div>
+    
+    <style>
+        #mapid{ width: 900px; height: 750px; }
+    </style>
+    <script>
+
+
+    // basemap layer
+    var map = L.map('mapid', {
+    center: [35.589793, -82.564742],
+    zoom: 13,
+    maxZoom: 18
+});
+
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19}).addTo(map);
+        osm.addTo(map)
+
+
+    // law beats layer
+    function getBeatColor(count) {
+        return count > 52 ? '#bd0026' : //80-99th percentile
+            count > 32 ? '#f03b20' : //60-79th percentile
+            count > 22 ? '#fd8d3c' : //40-57th percentile
+            count > 13  ? '#fecc5c' : //20-39th percentile
+                            '#ffffb2'; //0-19th percentile
+    }
+
+    // quantile: 13, 22, 32, 52
+    // natural breaks: 20, 58, 101, 158
+
+    // var lawbeats = L.geoJSON(beats, {
+    //     style: function(feature) {
+    //         return {
+    //             color: 'black', // border color
+    //             weight: 1,
+    //             fillColor: getBeatColor(feature.properties.law_beats_with_all_monthly_stop_counts),
+    //             fillOpacity: 0.6
+    //         };
+    //     },
+    //     onEachFeature: function(feature, layer) {
+    //         layer.bindPopup(
+    //             "Beat: " + feature.properties.beat + "<br>" +
+    //             "Stops this month: " + feature.properties.law_beats_with_all_monthly_stop_counts
+    //         );
+    //     }
+    // }).addTo(map);
+
+    var selectedMonth = "2026-01-01";
+
+    function getFilteredBeats() {
+    return {
+        type: "FeatureCollection",
+        features: beats.features.filter(function(feature) {
+            return feature.properties.YYYY_MM === selectedMonth;
+        })
+    };
+}
+
+    function getFilteredStops() {
+    return {
+        type: "FeatureCollection",
+        features: stops.features.filter(function(feature) {
+            return feature.properties.YYYY_MM === selectedMonth;
+        })
+    };
+}
+
+    if (lawbeats) {
+        map.removeLayer(lawbeats);
+    }
+
+    var lawbeats = L.geoJSON(getFilteredBeats(), {
+        style: function(feature) {
+            return {
+                color: 'black',
+                weight: 1,
+                fillColor: getBeatColor(feature.properties.stop_count_beat_month),
+                fillOpacity: 0.9
+            };
+        },
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup(
+                "Beat: " + feature.properties.beat + "<br>" +
+                "Month: " + feature.properties.YYYY_MM + "<br>" +
+                "Stops: " + feature.properties.stop_count_beat_month
+            );
+        }
+    }).addTo(map);
+
+    // stops layer
+    //var markers = L.markerClusterGroup({chunkedLoading: true });
+
+    var stopMarkers = L.markerClusterGroup({chunkedLoading: true });
+    map.addLayer(stopMarkers);
+
+    var myGeoJSON = L.geoJSON(stops, {
+        pointToLayer: function (feature, latlng) {
+        return L.marker(latlng); // or use your stopIcon / circleMarker
+        },
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(
+            "Race: " + feature.properties.name_race_2 + "<br>" +
+            "Age: " + feature.properties.name_age_2
+        );
+    }});
+
+    //markers.addLayer(myGeoJSON);
+    //map.addLayer(markers);
+
+    // slider
+
+    var months = [
+        "2017-10-01", "2017-11-01", "2017-12-01",
+        "2018-01-01", "2018-02-01", "2018-03-01", "2018-04-01", "2018-05-01", "2018-06-01", "2018-07-01", "2018-08-01", "2018-09-01", "2018-10-01", "2018-11-01", "2018-12-01",
+        "2019-01-01", "2019-02-01", "2019-03-01", "2019-04-01", "2019-05-01", "2019-06-01", "2019-07-01", "2019-08-01", "2019-09-01", "2019-10-01", "2019-11-01", "2019-12-01",
+        "2020-01-01", "2020-02-01", "2020-03-01", "2020-04-01", "2020-05-01", "2020-06-01", "2020-07-01", "2020-08-01", "2020-09-01", "2020-10-01", "2020-11-01", "2020-12-01",
+        "2021-01-01", "2021-02-01", "2021-03-01", "2021-04-01", "2021-05-01", "2021-06-01", "2021-07-01", "2021-08-01", "2021-09-01", "2021-10-01", "2021-11-01", "2021-12-01",
+        "2022-01-01", "2022-02-01", "2022-03-01", "2022-04-01", "2022-05-01", "2022-06-01", "2022-07-01", "2022-08-01", "2022-09-01", "2022-10-01", "2022-11-01", "2022-12-01",
+        "2023-01-01", "2023-02-01", "2023-03-01", "2023-04-01", "2023-05-01", "2023-06-01", "2023-07-01", "2023-08-01", "2023-09-01", "2023-10-01", "2023-11-01", "2023-12-01", 
+        "2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01", "2024-07-01", "2024-08-01", "2024-09-01", "2024-10-01", "2024-11-01", "2024-12-01",
+        "2025-01-01", "2025-02-01", "2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", 
+        "2026-01-01"
+    ];
+
+    var slider = document.getElementById("monthSlider");
+    var label = document.getElementById("monthLabel");
+
+    // initial label
+    label.innerHTML = months[0];
+
+    // slider.addEventListener("input", function() {
+    //     selectedMonth = months[this.value];
+    //     label.innerHTML = selectedMonth;
+    //     drawBeats();
+    // });
+
+    slider.addEventListener("input", function() {
+        selectedMonth = months[this.value];
+        label.innerHTML = selectedMonth;
+        updateMap();
+    });
+
+    // function moveSlider(value) {
+    //     selectedMonth = value; // this changes the value of the selectedMonth variable
+    //     map.removeLayer(lawbeats);// leaflet method to remove a layer / 
+    //     lawbeats = L.geoJSON(getFilteredBeats());
+    //     map.addLayer(lawbeats); // add the new layer
+    //     document.getElementById('theMear').innerHTML = 'Month: '+ value
+    // }
+    // moveSlider('2026-01-01')
+
+    // function drawBeats() {
+    //     if (lawbeats) {
+    //         map.removeLayer(lawbeats);
+    //     }
+        
+    //     lawbeats = L.geoJSON(getFilteredBeats(), {
+    //         style: function(feature) {
+    //             return {
+    //                 color: 'black',
+    //                 weight: 1,
+    //                 fillColor: getBeatColor(feature.properties.stop_count_beat_month),
+    //                 fillOpacity: 0.6
+    //             };
+    //         },
+    //         onEachFeature: function(feature, layer) {
+    //             layer.bindPopup(
+    //                 "Beat: " + feature.properties.beat + "<br>" +
+    //                 "Month: " + feature.properties.YYYY_MM + "<br>" +
+    //                 "Stops: " + feature.properties.stop_count_beat_month
+    //             );
+    //         }
+    //     }).addTo(map);
+    // }
+
+    function updateMap() {
+        // --- Update beats ---
+        if (lawbeats) map.removeLayer(lawbeats);
+        lawbeats = L.geoJSON(getFilteredBeats(), {
+            style: function(feature) {
+                return {
+                    color: 'black',
+                    weight: 1,
+                    fillColor: getBeatColor(feature.properties.stop_count_beat_month),
+                    fillOpacity: 0.9
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                layer.bindPopup(
+                    "Beat: " + feature.properties.beat + "<br>" +
+                    "Month: " + feature.properties.YYYY_MM + "<br>" +
+                    "Stops: " + feature.properties.stop_count_beat_month
+                );
+            }
+        }).addTo(map);
+
+        // --- Update stops ---
+        stopMarkers.clearLayers(); // remove old stops
+        var filteredStops = L.geoJSON(getFilteredStops(), {
+            pointToLayer: function(feature, latlng) {
+                return L.marker(latlng);
+            },
+            onEachFeature: function(feature, layer) {
+                layer.bindPopup(
+                    "Race: " + feature.properties.name_race_2 + "<br>" +
+                    "Age: " + feature.properties.name_age_2
+                );
+            }
+        });
+        stopMarkers.addLayer(filteredStops);
+    }
+
+// create a leaflet legend
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+
+    // These should match your getBeatColor thresholds
+    var grades = [0, 13, 22, 32, 52];
+
+    // quantile: 13, 22, 32, 52
+    // natural breaks: 20, 58, 101, 158
+
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getBeatColor(grades[i] + 0.1) + '; width: 15px; height: 15px; display: inline-block;"></i> ' +
+            grades[i] + (grades[i + 1] 
+                ? '&ndash;' + grades[i + 1] + '<br>' 
+                : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(map);
+
+
+// === LEGEND TITLE ===
+var legendTitle = L.control({position: 'bottomright'});
+
+legendTitle.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this._div.innerHTML = '<h4>Stops per Beat</h4>';
+    return this._div;
+};
+
+legendTitle.addTo(map);
+
+    </script>
+    </body>
+</html>
+
+
+//4/9 mtg notes
+    // convert pts dataset to cvs, open in r (keep x,y,race,and date -- just these 4 columns to reduce dataset size)
+    // chat -> have this dataset, want to present w dot markers, slider controlling for yrs
+        // address overlapping points -- in R, do this ahead of making map
+            // like if x and y are the same, SHIFT by a little bit -- code this in R
+
+    // change cluster colorscheme -- make it go better w the background, somewhat matching
+    // add legend
+    // use colorbrewer for polygon colorscheme
+    // play w natural breaks across whole dataset for polygon color scheme

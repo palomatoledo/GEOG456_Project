@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <title>Tropical Storm Paul</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+        <script src="./paul_pts.js" ></script>
+    </head>
+    <body>
+    <div id="mapid"></div>
+    
+    <style>
+        #mapid{ width: 900px; height: 500px; }
+    </style>
+    <script>
+
+    var map = L.map('mapid').setView([19, -120], 5.3);
+
+    // create the variable map by  initializing the L.map class (a Leaflet class) with the mapid element that we created before
+
+    L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenTopoMap</a> contributors'
+       }).addTo(map);
+
+    //L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+    //    attribution: '&copy; <a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases">CyclOSM</a> contributors'
+    //    }).addTo(map);
+
+    // create custom icon variable
+    var hurricaneIcon = L.icon({
+        iconUrl: './white_icon.png',
+        iconSize: [30,30], // size of the icon
+        popupAnchor: [0,0] // where the icon is located relative to the lat lon of the point. 
+        });
+
+    // create an HTML variable that will pop up with a photo of Tropical Storm Paul
+    var customPopup = "<a href='https://www.nhc.noaa.gov/data/tcr/EP182018_Paul.pdf'>Tropical Storm Paul (2018)</a><br/><img src='https://upload.wikimedia.org/wikipedia/commons/6/65/Paul_1982-09-29_1600Z.png' width='200px'/>";
+
+    // the following line should go at the end, before script closing tag 
+
+    L.geoJSON(hurricanePaul, {
+    pointToLayer: function (feature, latlng) {
+    return L.marker(latlng, {icon: hurricaneIcon});}})
+        .bindPopup(customPopup)
+    .addTo(map);
+    
+    </script>
+    </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+</head>
+
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+#map { height: 180px; }
+
+.selected{background-color: 'yellow';}
+
+</style>
+
+
+<body>
+
+  <script src="./NC20counties_pop_4326.js"></script>
+
+  
+
+    <div id="map"></div>
+    <table id="ncTable">
+    <tr>
+        <th>County Name</th>
+        <th>Population</th>
+    </tr>
+    </table>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+<script>
+
+// use map.getCenter or map.getZoom in the console to get the center and zoom level of map display, and paste here
+var map = L.map('map').setView([51.505, -0.09], 13);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+var ncCounties = L.geoJSON(nc).addTo(map)
+var myTable = document.getElementById('ncTable')
+
+function popTable(feature){
+    var myRow = document.createElement('tr') //creates a row (tr in html refers to row)
+    var myCell1 = document.createElement('td') //creates a cell
+    var myCell2 = document.createElement('td') //creates a cell
+
+    var name = feature.properties.NAME // gets name of each feature (county)
+    var population = feature.properties.Total // gets population of each feature (county)
+    
+    myCell1.innerHTML = name
+    myCell2.innerHTML = population
+
+  //when mouse clicks the element, console prints "hello world 1"
+  myCell1.addEventListener('click', function(){console.log('hello world 1')})
+  //when mouse hovers anywhere over the element, console prints "hello world 2"
+  myCell2.addEventListener('mouseenter', function(){console.log('hello world 2')})
+
+    myRow.append(myCell1)
+    myRow.append(myCell2)
+    myTable.append(myRow)
+}
+
+</script>
+
+
+</body>
+</html>
+
+//code from class but i have no idea where it goes
+
+function myFunction ()
+
+
