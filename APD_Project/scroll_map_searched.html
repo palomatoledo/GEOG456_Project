@@ -142,7 +142,12 @@
 <body>
   <div id="map"></div>
   <div class="year-label" id="yearLabel">2018</div>
-
+  
+  <div class="toggle-box">
+    <button id="allBtn" class="active">All stops</button>
+    <button id="searchedBtn">Driver searched</button>
+  </div>
+    
   <div id="story">
     <section class="step" data-year="2018">
       <div class="step-content">
@@ -213,11 +218,6 @@
     let currentLayer = null;
     let currentYear = null;
     const yearLabel = document.getElementById('yearLabel');
-
-    <div class="toggle-box">
-        <button id="allBtn" class="active">All stops</button>
-        <button id="searchedBtn">Driver searched</button>
-    </div>
 
     const loadedData = {};
 
