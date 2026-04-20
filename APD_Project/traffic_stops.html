@@ -65,6 +65,26 @@
         color: black;
         border-color: white;
         }
+
+        #monthSlider {
+        position: fixed;
+        left: 20px;
+        bottom: 30px;
+        width: 300px;
+        z-index: 1000;
+}
+
+        #monthLabel {
+        position: fixed;
+        left: 20px;
+        bottom: 60px;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        }
     </style>
     <script>
 
@@ -140,10 +160,10 @@
     var lawbeats = L.geoJSON(getFilteredBeats(), {
         style: function(feature) {
             return {
-                color: 'black',
-                weight: 1,
+                color: 'white',
+                weight: 0.8,
                 fillColor: getBeatColor(feature.properties.stop_count_beat_month),
-                fillOpacity: 0.9
+                fillOpacity: 0.7
             };
         },
         onEachFeature: function(feature, layer) {
