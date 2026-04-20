@@ -218,16 +218,17 @@
       "Other";
     }
 
-    function stylePoint(feature, latlng) {
+    function stylePoint(feature, latlng, opacity = 1) {
       const race = feature.properties.name_race_2;
       const color = getRaceColor(race);
-
+      
       return L.circleMarker(latlng, {
-        radius: 0.5,
+        radius: 2,
         fillColor: color,
         color: color,
         weight: 0,
-        fillOpacity: 1
+        fillOpacity: opacity,
+        opacity: opacity
       });
     }
 
@@ -239,37 +240,67 @@
       );
     }
 
+    function setLayerOpacity(layer, opacity) {
+      layer.eachLayer(function(marker) {
+        if (marker.setStyle) {
+          marker.setStyle({
+            fillOpacity: opacity,
+            opacity: opacity
+          });
+        }
+      });
+    }
+
     async function loadYear(year) {
       if (currentYear === year) return;
-
       yearLabel.textContent = year;
-
-      if (currentLayer) {
-        map.removeLayer(currentLayer);
-        currentLayer = null;
-      }
-
       currentYear = year;
-
+      
       try {
         let data;
-
         if (loadedData[year]) {
           data = loadedData[year];
         } else {
           const response = await fetch(`jittered_${year}.geojson`);
           if (!response.ok) {
-            throw new Error(`Could not load stops${year}.geojson`);
+            throw new Error(`Could not load jittered_${year}.geojson`);
           }
           data = await response.json();
           loadedData[year] = data;
         }
-
-        currentLayer = L.geoJSON(data, {
-          pointToLayer: stylePoint,
+        
+        const newLayer = L.geoJSON(data, {
+          pointToLayer: function(feature, latlng) {
+            return stylePoint(feature, latlng, 0);
+          },
           onEachFeature: onEachFeature
         }).addTo(map);
-
+        
+        let opacity = 0;
+        const fadeDuration = 600; // milliseconds
+        const stepTime = 30;
+        const opacityStep = stepTime / fadeDuration;
+        const oldLayer = currentLayer;
+        const fadeInterval = setInterval(() => {
+          opacity += opacityStep;
+          if (opacity >= 1) {
+            opacity = 1;
+          }
+          
+          setLayerOpacity(newLayer, opacity);
+          if (oldLayer) {
+            setLayerOpacity(oldLayer, 1 - opacity);
+          }
+          
+          if (opacity >= 1) {
+            clearInterval(fadeInterval);
+            if (oldLayer) {
+              map.removeLayer(oldLayer);
+            }
+            
+            currentLayer = newLayer;
+          }
+        }, stepTime);
       } catch (error) {
         console.error(error);
       }
