@@ -200,20 +200,22 @@
 
     const loadedData = {};
 
-    function getRaceColor(race) {
+    function getRaceColor(race) {race = String(race || "").trim().toUpperCase();
       return race === "W" ? "#d15c2d" :
-             race === "B" ? "#a9d92f" :
-             race === "I" ? "#774bdc" :
-             race === "A" ? "#5abee9" :
-             race === "U" ? "#e665bf" :
+      race === "B" ? "#a9d92f" :
+      race === "I" ? "#774bdc" :
+      race === "A" ? "#5abee9" :
+      race === "U" ? "#e665bf" :
+      "#cccccc";
     }
 
-    function raceLabel(race) {
+    function raceLabel(race) {race = String(race || "").trim().toUpperCase();
       return race === "W" ? "White" :
-             race === "B" ? "Black" :
-             race === "A" ? "Asian" :
-             race === "I" ? "Indian" :
-             race === "U" ? "Unknown" :
+      race === "B" ? "Black" :
+      race === "I" ? "Indian" :
+      race === "A" ? "Asian" :
+      race === "U" ? "Unknown" :
+      "Other";
     }
 
     function stylePoint(feature, latlng) {
