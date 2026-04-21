@@ -34,82 +34,87 @@
     
     <style>
         html, body {
-        margin: 0;
-        padding: 0;
-        background: black;
-        color: white;
-        font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
         }
 
         #mapid {
-        width: 100vw;
-        height: 100vh;
+            width: 100vw;
+            height: 100vh;
         }
         
         .map-nav {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1000;
-        background: rgba(0, 0, 0, 0.75);
-        padding: 8px;
-        border-radius: 8px;
-        display: flex;
-        gap: 8px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            gap: 8px;
         }
 
         .map-nav a {
-        color: white;
-        text-decoration: none;
-        background: #222;
-        border: 1px solid #555;
-        padding: 10px 16px;
-        border-radius: 6px;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        display: block;
-        text-align: center;
-        min-width: 140px;}
+            color: white;
+            text-decoration: none;
+            background: #222;
+            border: 1px solid #555;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            display: block;
+            text-align: center;
+            min-width: 140px;
+        }
 
 
         .map-nav a.active {
-        background: white;
-        color: black;
-        border-color: white;
-        pointer-events: none;
-        cursor: default;}
+            background: white;
+            color: black;
+            border-color: white;
+            pointer-events: none;
+            cursor: default;
+        }
 
         #sliderPanel {
-        position: fixed;
-        left: 20px;
-        bottom: 20px;
-        z-index: 1000;
-        background: rgba(0, 0, 0, 0.75);
-        padding: 12px 14px;
-        border-radius: 10px;
-        width: 320px;}
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 12px 14px;
+            border-radius: 10px;
+            width: 320px;
+        }
 
         #monthLabel {
-        color: white;
-        font-size: 14px;
-        margin-bottom: 8px;}
+            color: white;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
 
         #monthSlider {
-        width: 100%;}
+            width: 100%;
+        }
 
         #titleBox {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1001;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
 
-        text-align: center;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 16px 24px;
-        border-radius: 12px;
-        max-width: 600px;
-        transition: opacity 0.6s ease, transform 0.6s ease;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 16px 24px;
+            border-radius: 12px;
+            max-width: 600px;
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
         #titleBox h1 {
@@ -140,9 +145,13 @@
             border-radius: 8px;
         }
 
-.info.legend i {
-  margin-right: 6px;
-}
+        .info.legend i {
+            margin-right: 6px;
+        }
+
+        .custom-cluster div {
+            box-shadow: 0 0 12px rgba(255,255,255,0.2);
+        }
 
 
     </style>
