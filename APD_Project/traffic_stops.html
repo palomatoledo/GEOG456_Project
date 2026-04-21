@@ -229,14 +229,15 @@
             var count = cluster.getChildCount();
             let color;
             if (count < 20) {
-                color = "#4cc9f0";
+                color = "#cccccc";
             } else if (count < 50) {
-                color = "#f9c74f";
+                color = "#999999";
             } else if (count < 100) {
-                color = "#f9844a";
+                color = "#666666";
             } else {
-                color = "#f94144";
+                color = "#ffffff";
             }
+
             return L.divIcon({
                 html: `<div style="
                 background:${color};
