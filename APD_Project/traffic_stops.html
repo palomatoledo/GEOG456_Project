@@ -146,7 +146,7 @@
     <script>
 
     const stopIcon = L.icon({
-        iconUrl: 'your-icon.png',
+        iconUrl: 'black_marker_icon.png',
         iconSize: [28, 28],
         iconAnchor: [14, 28],
         popupAnchor: [0, -28]
@@ -305,7 +305,7 @@
         lawbeats = L.geoJSON(getFilteredBeats(), {
             style: function(feature) {
                 return {
-                    color: 'black',
+                    color: 'white',
                     weight: 1,
                     fillColor: getBeatColor(feature.properties.stop_count_beat_month),
                     fillOpacity: 0.7
