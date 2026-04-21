@@ -26,8 +26,11 @@
             <a href="traffic_stops.html" class="active">Beat map</a>
         </div>
     <div id="mapid"></div>
-    <input type="range" id="monthSlider" min="0" max="86" value="0">
-    <div id="monthLabel"></div>
+
+    <div id="sliderPanel">
+        <div id="monthLabel"></div>
+        <input type="range" id="monthSlider" min="0" max="86" value="0">
+    </div>
     
     <style>
         html, body {
@@ -73,25 +76,23 @@
         pointer-events: none;
         cursor: default;}
 
-        #monthSlider {
+        #sliderPanel {
         position: fixed;
         left: 20px;
-        bottom: 30px;
-        width: 300px;
-        z-index: 1000;
-}
-
-        #monthLabel {
-        position: fixed;
-        left: 20px;
-        bottom: 60px;
+        bottom: 20px;
         z-index: 1000;
         background: rgba(0, 0, 0, 0.75);
+        padding: 12px 14px;
+        border-radius: 10px;
+        width: 320px;}
+
+        #monthLabel {
         color: white;
-        padding: 8px 12px;
-        border-radius: 8px;
         font-size: 14px;
-        }
+        margin-bottom: 8px;}
+
+        #monthSlider {
+        width: 100%;}
 
         #titleBox {
         position: fixed;
@@ -119,6 +120,28 @@
             line-height: 1.4;
             color: #ddd;
         }
+
+        .info.legend {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 12px;
+            border-radius: 8px;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .info {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+.info.legend i {
+  margin-right: 6px;
+}
+
+
     </style>
     <script>
 
@@ -216,9 +239,13 @@
     map.addLayer(stopMarkers);
 
     var myGeoJSON = L.geoJSON(stops, {
-        pointToLayer: function (feature, latlng) {
-        return L.marker(latlng); // or use your stopIcon / circleMarker
-        },
+        const stopIcon = L.icon({
+        iconUrl: 'black_marker_icon.png',
+        iconSize: [28, 28],
+        iconAnchor: [14, 28],
+        popupAnchor: [0, -28]
+    });
+
     onEachFeature: function (feature, layer) {
         layer.bindPopup(
             "Race: " + feature.properties.name_race_2 + "<br>" +
@@ -318,7 +345,7 @@
         stopMarkers.clearLayers(); // remove old stops
         var filteredStops = L.geoJSON(getFilteredStops(), {
             pointToLayer: function(feature, latlng) {
-                return L.marker(latlng);
+                return L.marker(latlng, { icon: stopIcon });
             },
             onEachFeature: function(feature, layer) {
                 layer.bindPopup(
