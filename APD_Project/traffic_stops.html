@@ -15,6 +15,12 @@
 
     </head>
     <body>
+
+        <div id="titleBox">
+            <h1>Asheville Traffic Stops</h1>
+            <p>Explore patterns in traffic stops over time. Scroll to move through years and use the toggle to filter stops.</p>
+        </div>
+
         <div class="map-nav">
             <a href="scroll_map_searched.html">Point map</a>
             <a href="traffic_stops.html" class="active">Beat map</a>
@@ -85,6 +91,36 @@
         padding: 8px 12px;
         border-radius: 8px;
         font-size: 14px;
+        }
+
+        #titleBox {
+        position: fixed;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 4;
+
+        text-align: center;
+
+        background: rgba(0, 0, 0, 0.7);
+        padding: 16px 24px;
+        border-radius: 12px;
+
+        max-width: 600px;
+
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+        #titleBox h1 {
+            margin: 0 0 6px 0;
+            font-size: 1.8rem;
+        }
+
+        #titleBox p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #ddd;
         }
     </style>
     <script>
