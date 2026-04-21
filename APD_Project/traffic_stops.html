@@ -145,6 +145,12 @@
     </style>
     <script>
 
+    const stopIcon = L.icon({
+        iconUrl: 'your-icon.png',
+        iconSize: [28, 28],
+        iconAnchor: [14, 28],
+        popupAnchor: [0, -28]
+    });
 
     // basemap layer
     var map = L.map('mapid', {
@@ -217,12 +223,9 @@
     map.addLayer(stopMarkers);
 
     var myGeoJSON = L.geoJSON(stops, {
-        const stopIcon = L.icon({
-        iconUrl: 'black_marker_icon.png',
-        iconSize: [28, 28],
-        iconAnchor: [14, 28],
-        popupAnchor: [0, -28]
-    });
+        pointToLayer: function(feature, latlng) {
+            return L.marker(latlng, { icon: stopIcon });
+        },
 
     onEachFeature: function (feature, layer) {
         layer.bindPopup(
