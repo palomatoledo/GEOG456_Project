@@ -299,7 +299,16 @@
     var label = document.getElementById("monthLabel");
 
     // initial label
-    label.innerHTML = months[0];
+    slider.value = 0;
+
+
+    const initialDate = new Date(months[0]);
+    label.innerHTML = initialDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long'
+    });
+
+    updateMap();
 
     // slider.addEventListener("input", function() {
     //     selectedMonth = months[this.value];
