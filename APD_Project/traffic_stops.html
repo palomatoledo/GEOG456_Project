@@ -309,7 +309,11 @@
 
     slider.addEventListener("input", function() {
         selectedMonth = months[this.value];
-        label.innerHTML = selectedMonth;
+        const date = new Date(selectedMonth);
+        label.innerHTML = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long'
+        });
         updateMap();
     });
 
@@ -358,7 +362,7 @@
                     fillOpacity: 0.7
                 };
             },
-            onEachFeature: function(feature, layer) {
+            onEachFeature: function(feature, layer) {               
                 const rawDate = feature.properties.YYYY_MM;
                 const formattedDate = rawDate ? rawDate.slice(0, 7) : "N/A";
                 layer.bindPopup(
