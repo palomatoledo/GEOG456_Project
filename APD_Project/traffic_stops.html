@@ -170,27 +170,8 @@
                             '#ffffb2'; //0-19th percentile
     }
 
-    // quantile: 13, 22, 32, 52
-    // natural breaks: 20, 58, 101, 158
 
-    // var lawbeats = L.geoJSON(beats, {
-    //     style: function(feature) {
-    //         return {
-    //             color: 'black', // border color
-    //             weight: 1,
-    //             fillColor: getBeatColor(feature.properties.law_beats_with_all_monthly_stop_counts),
-    //             fillOpacity: 0.6
-    //         };
-    //     },
-    //     onEachFeature: function(feature, layer) {
-    //         layer.bindPopup(
-    //             "Beat: " + feature.properties.beat + "<br>" +
-    //             "Stops this month: " + feature.properties.law_beats_with_all_monthly_stop_counts
-    //         );
-    //     }
-    // }).addTo(map);
-
-    var selectedMonth = "2026-01-01";
+ var selectedMonth = "2026-01-01";
 
     function getFilteredBeats() {
     return {
@@ -232,9 +213,6 @@
         }
     }).addTo(map);
 
-    // stops layer
-    //var markers = L.markerClusterGroup({chunkedLoading: true });
-
     var stopMarkers = L.markerClusterGroup({chunkedLoading: true });
     map.addLayer(stopMarkers);
 
@@ -253,8 +231,6 @@
         );
     }});
 
-    //markers.addLayer(myGeoJSON);
-    //map.addLayer(markers);
 
     // slider
 
@@ -333,12 +309,23 @@
                 };
             },
             onEachFeature: function(feature, layer) {
+                const rawDate = feature.properties.YYYY_MM;
+                const formattedDate = rawDate ? rawDate.slice(0, 7) : "N/A";
                 layer.bindPopup(
                     "Beat: " + feature.properties.beat + "<br>" +
-                    "Month: " + feature.properties.YYYY_MM + "<br>" +
+                    "Month: " + formattedDate + "<br>" +
                     "Stops: " + feature.properties.stop_count_beat_month
                 );
             }
+            
+            
+            // onEachFeature: function(feature, layer) {
+            //     layer.bindPopup(
+            //         "Beat: " + feature.properties.beat + "<br>" +
+            //         "Month: " + feature.properties.YYYY_MM + "<br>" +
+            //         "Stops: " + feature.properties.stop_count_beat_month
+            //     );
+            // }
         }).addTo(map);
 
         // --- Update stops ---
