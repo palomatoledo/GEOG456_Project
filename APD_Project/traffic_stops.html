@@ -353,4 +353,98 @@
     //                 "Beat: " + feature.properties.beat + "<br>" +
     //                 "Month: " + feature.properties.YYYY_MM + "<br>" +
     //                 "Stops: " + feature.properties.stop_count_beat_month
- 
+    //             );
+    //         }
+    //     }).addTo(map);
+    // }
+
+    function updateMap() {
+        // --- Update beats ---
+        if (lawbeats) map.removeLayer(lawbeats);
+        lawbeats = L.geoJSON(getFilteredBeats(), {
+            style: function(feature) {
+                return {
+                    color: 'white',
+                    weight: 1,
+                    fillColor: getBeatColor(feature.properties.stop_count_beat_month),
+                    fillOpacity: 0.7
+                };
+            },
+            onEachFeature: function(feature, layer) {               
+                const rawDate = feature.properties.YYYY_MM;
+                const formattedDate = rawDate ? rawDate.slice(0, 7) : "N/A";
+                layer.bindPopup(
+                    "Beat: " + feature.properties.beat + "<br>" +
+                    "Month: " + formattedDate + "<br>" +
+                    "Stops: " + feature.properties.stop_count_beat_month
+                );
+            }
+            
+            
+            // onEachFeature: function(feature, layer) {
+            //     layer.bindPopup(
+            //         "Beat: " + feature.properties.beat + "<br>" +
+            //         "Month: " + feature.properties.YYYY_MM + "<br>" +
+            //         "Stops: " + feature.properties.stop_count_beat_month
+            //     );
+            // }
+        }).addTo(map);
+
+        // --- Update stops ---
+        stopMarkers.clearLayers(); // remove old stops
+        var filteredStops = L.geoJSON(getFilteredStops(), {
+            pointToLayer: function(feature, latlng) {
+                return L.marker(latlng, { icon: stopIcon });
+            },
+            onEachFeature: function(feature, layer) {
+                layer.bindPopup(
+                    "Race: " + feature.properties.name_race_2 + "<br>" +
+                    "Age: " + feature.properties.name_age_2
+                );
+            }
+        });
+        stopMarkers.addLayer(filteredStops);
+    }
+
+// create a leaflet legend
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+
+    // These should match your getBeatColor thresholds
+    var grades = [0, 13, 22, 32, 52];
+
+    // quantile: 13, 22, 32, 52
+    // natural breaks: 20, 58, 101, 158
+
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getBeatColor(grades[i] + 0.1) + '; width: 15px; height: 15px; display: inline-block;"></i> ' +
+            grades[i] + (grades[i + 1] 
+                ? '&ndash;' + grades[i + 1] + '<br>' 
+                : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(map);
+
+
+// === LEGEND TITLE ===
+var legendTitle = L.control({position: 'bottomright'});
+
+legendTitle.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this._div.innerHTML = '<h4>Stops per Beat</h4>';
+    return this._div;
+};
+
+legendTitle.addTo(map);
+
+    </script>
+    </body>
+</html>
+
+
