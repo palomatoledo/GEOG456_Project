@@ -1,7 +1,7 @@
 // You need to create a geometry, otherwise this will not work. 
 
-var yearBefore = '2012'
-var yearAfter = '2019'
+var yearBefore = '2008'
+var yearAfter = '2012'
 
 // var dataset = ee.ImageCollection('USDA/NAIP/DOQQ')
 //                   .filter(ee.Filter.date('2017-01-01', '2018-12-31'));

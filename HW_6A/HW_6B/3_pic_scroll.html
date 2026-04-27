@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider Change</title>
+</head>
+<style>
+    body{
+        background-color: black;
+        font-size:20px;
+        height:2000px;
+    
+        
+    }
+    div#image_container{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 80px;
+        
+    }
+    img{
+        width: 100%;
+        position: absolute;
+    }
+
+    #before{
+        z-index: 1;
+        opacity: 1;
+    }
+    #after{
+        z-index: 3;
+        opacity: 0;
+    }
+#myText{
+    color: aliceblue;
+    top: 80px;
+    display: grid;
+    width: 200px;
+    height: 1000px;
+    grid-template-rows: 100%;
+    background-color: rgb(35, 95, 95, .5);
+    position: absolute;
+    right: 0%;
+    margin-left: 50%;
+}
+#yAfter{
+
+    background-color: rgb(35, 95, 95, .5);
+    /* color: brown; */
+}
+#myP{
+    top:0;
+    position: fixed;
+    color: aliceblue;
+}
+h3{
+    color: white;
+    position: fixed;
+    font-size: 20px;
+    top: 30px;
+}
+</style>
+<body>
+    <h3 id="h3scroll">The onscroll Event</h3><br>
+
+    <p id="myP" style="position:fixed">
+        Scroll to see changes</p> <br>
+    <div id="image_container">
+        <img id="after"  src="./2008matched.png" alt="2008">
+        <img id="middle"  src="./2012matched.png" alt="2012">
+        <img id="before" src="./2016matched.png" alt="2016">
+
+    </div>
+    <div id="myText">
+    <div id="yBefore">
+        <h1>Year 2008</h1>
+        <p>These three images show Navy Yard, a neighborhood in Washington, DC, in 2008, 2012, 2016. As you compare the images, you might notice that significant construction over the course of this 8 year period has altered the landscape. Notably, 2008 and 2016 have more portions of emply plots of land, whereas the vast majority of the area was covered in buildings in 2012. Notice, also, that a walkway appears to have been build by the water between 2008 and 2012. The streets and general layout of the neighborhood, on the other hand, remain nearly exactly the same.</p>
+    </div>
+    <div id="yMiddle">
+        <h1>Year 2012</h1>
+        <p>These three images show Navy Yard, a neighborhood in Washington, DC, in 2008, 2012, 2016. As you compare the images, you might notice that significant construction over the course of this 8 year period has altered the landscape. Notably, 2008 and 2016 have more portions of emply plots of land, whereas the vast majority of the area was covered in buildings in 2012. Notice, also, that a walkway appears to have been build by the water between 2008 and 2012. The streets and general layout of the neighborhood, on the other hand, remain nearly exactly the same.</p>
+    </div>
+    <div id="yAfter">
+        <h1>Year 2016</h1>
+        <p>These three images show Navy Yard, a neighborhood in Washington, DC, in 2008, 2012, 2016. As you compare the images, you might notice that significant construction over the course of this 8 year period has altered the landscape. Notably, 2008 and 2016 have more portions of emply plots of land, whereas the vast majority of the area was covered in buildings in 2012. Notice, also, that a walkway appears to have been build by the water between 2008 and 2012. The streets and general layout of the neighborhood, on the other hand, remain nearly exactly the same.</p>
+    </div>
+    </div>
+<script>
+
+    var maxY = document.documentElement.scrollHeight - document.documentElement.clientHeight
+    // The previous is a good way of calculating the maximum vertical scrolling. 
+
+    window.onscroll = function() {myFunction()}; // when you scroll the myFunction will be called. 
+    
+    // myFunction changes the opacity of the image based on the scroll
+    function myFunction() {
+        var opacity = window.scrollY/maxY
+        document.getElementById('after').style.opacity = opacity
+        // I added this next line so you can see the values generated when you scroll displayed on the page. 
+        document.getElementById("h3scroll").innerText = "  MaxY = " + maxY +  "   Scroll Y = "+window.scrollY + "  Scoll Y / Max Y = " + window.scrollY/maxY
+    }
+    </script>
+</body>
+</html>
